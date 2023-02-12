@@ -1,10 +1,10 @@
 import React from "react";
 import ProductForm from "../components/ProductForm";
 
-const AddProduct = () => {
+const AddProduct = ({ onAddProduct }) => {
   return (
     <div>
-      <ProductForm />
+      <ProductForm onSubmit={onAddProduct} />
     </div>
   );
 };

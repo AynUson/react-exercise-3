@@ -12,6 +12,7 @@ import Badge from "@mui/material/Badge";
 import { Link, Route, Routes } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AddProduct from "./pages/AddProduct";
+
 export default class App extends Component {
   use;
   state = {
@@ -25,6 +26,19 @@ export default class App extends Component {
 
   getProdsOnCart = () => {
     return this.state.products.filter((prod) => prod.qty > 0);
+  };
+
+  handleAddProd = (prod) => {
+    this.setState({
+      products: [
+        ...this.state.products,
+        { ...prod, id: this.state.products.length + 1 * 5 },
+      ],
+      // products: this.state.products.push({
+      //   ...prod,
+      //   id: this.state.products.length + 1,
+      // }),
+    });
   };
 
   handleDecrementCart = (id) => {
@@ -86,7 +100,10 @@ export default class App extends Component {
               path="/allProducts"
               element={<ItemsList prods={this.state.products} />}
             ></Route>
-            <Route path="/prods/new" element={<AddProduct />} />
+            <Route
+              path="/prods/new"
+              element={<AddProduct onAddProduct={this.handleAddProd} />}
+            />
           </Routes>
         </div>
       </>

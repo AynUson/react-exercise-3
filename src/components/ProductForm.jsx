@@ -5,6 +5,7 @@ import {
   CardContent,
   CardHeader,
   Grid,
+  Input,
   TextField,
 } from "@mui/material";
 import Joi from "joi";
@@ -28,19 +29,36 @@ const ProductForm = ({ onSubmit, initialValue }) => {
 
   const schema = Joi.object({
     title: Joi.string().min(2).max(100).required(),
-    description: Joi.string().min(3).max(20).required(),
-    email: Joi.string()
-      .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-      .required(),
-    phone: Joi.string().min(6).max(15).allow("").optional(),
-    address: Joi.string().min(3).max(500).allow("").optional(),
-    website: Joi.string().uri().allow("").optional(),
+    description: Joi.string().min(3).max(100).required(),
+    category: Joi.string().min(3).max(100).required(),
+    price: Joi.string().min(1).max(15).required(),
+    image: Joi.string().min(3).max(999999).required(),
+    qty: Joi.string().min(0).max(500).allow(0).optional(),
   });
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(form);
     onSubmit(form);
     navigate("/");
+  };
+
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      setForm({
+        ...form,
+        image: event.target.result,
+      });
+      console.log(file.name);
+      console.log(file.type);
+      console.log(file.size + " bytes");
+      console.log(event.target.result);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const handleChange = ({ currentTarget: input }) => {
@@ -85,11 +103,11 @@ const ProductForm = ({ onSubmit, initialValue }) => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  name="name"
-                  error={!!errors.name}
-                  helperText={errors.name}
+                  name="title"
+                  error={!!errors.title}
+                  helpertext={errors.title}
                   onChange={handleChange}
-                  value={form.name}
+                  value={form.title}
                   label="Title"
                   variant="standard"
                   fullWidth
@@ -97,11 +115,11 @@ const ProductForm = ({ onSubmit, initialValue }) => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  name="username"
-                  error={!!errors.username}
-                  helperText={errors.username}
+                  name="description"
+                  error={!!errors.description}
+                  helpertext={errors.description}
                   onChange={handleChange}
-                  value={form.username}
+                  value={form.description}
                   label="Description"
                   variant="standard"
                   fullWidth
@@ -109,11 +127,11 @@ const ProductForm = ({ onSubmit, initialValue }) => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  name="email"
-                  error={!!errors.email}
-                  helperText={errors.email}
+                  name="category"
+                  error={!!errors.category}
+                  helpertext={errors.category}
                   onChange={handleChange}
-                  value={form.email}
+                  value={form.category}
                   label="Category"
                   variant="standard"
                   fullWidth
@@ -121,27 +139,27 @@ const ProductForm = ({ onSubmit, initialValue }) => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  name="phone"
-                  error={!!errors.phone}
-                  helperText={errors.phone}
+                  name="price"
+                  error={!!errors.price}
+                  helpertext={errors.price}
                   onChange={handleChange}
-                  value={form.phone}
+                  value={form.price}
                   label="Price"
                   variant="standard"
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  name="address"
-                  error={!!errors.address}
-                  helperText={errors.address}
+                <Input
+                  variant="contained"
+                  name="image"
+                  error={!!errors.image}
+                  helpertext={errors.image}
                   onChange={handleChange}
-                  value={form.address}
+                  value={form.image}
                   label="Image"
-                  variant="standard"
-                  fullWidth
-                />
+                  type="file"
+                ></Input>
               </Grid>
             </Grid>
           </CardContent>
